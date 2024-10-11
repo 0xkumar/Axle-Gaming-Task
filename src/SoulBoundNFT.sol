@@ -7,14 +7,11 @@ import "../lib/openzeppelin-contracts/contracts/access/Ownable.sol";
 contract SoulBoundNFT is ERC721, Ownable {
     // Counter for token IDs
     uint256 private _tokenIdCounter;
-    
+
     // Mapping to store token URIs
     mapping(uint256 => string) private _tokenURIs;
 
-    constructor(
-        string memory name,
-        string memory symbol
-    ) ERC721(name, symbol) Ownable(msg.sender) {}
+    constructor(string memory name, string memory symbol) ERC721(name, symbol) Ownable(msg.sender) {}
 
     /**
      * @dev Allows the contract owner to mint a new SoulBound NFT to a recipient
@@ -25,7 +22,7 @@ contract SoulBoundNFT is ERC721, Ownable {
         require(balanceOf(to) == 0, "Recipient already has a SoulBound NFT");
         uint256 tokenId = _tokenIdCounter;
         _tokenIdCounter++;
-        
+
         _safeMint(to, tokenId);
         _setTokenURI(tokenId, uri);
     }
@@ -51,12 +48,12 @@ contract SoulBoundNFT is ERC721, Ownable {
      */
     function _update(address to, uint256 tokenId, address auth) internal virtual override returns (address) {
         address from = _ownerOf(tokenId);
-        
+
         // If this is a mint operation (from = address(0)), allow it
         if (from == address(0)) {
             return super._update(to, tokenId, auth);
         }
-        
+
         // For all other operations (transfers, burns), revert
         revert("SoulBoundNFT: Token transfers are disabled");
     }
@@ -64,11 +61,11 @@ contract SoulBoundNFT is ERC721, Ownable {
     /**
      * @dev Disable approval functions
      */
-    function approve(address/* to*/, uint256/* tokenId*/) public virtual override {
+    function approve(address, /* to*/ uint256 /* tokenId*/ ) public virtual override {
         revert("SoulBoundNFT: Token approvals are disabled");
     }
 
-    function setApprovalForAll(address/* operator*/, bool/* approved*/) public virtual override {
+    function setApprovalForAll(address, /* operator*/ bool /* approved*/ ) public virtual override {
         revert("SoulBoundNFT: Token approvals are disabled");
     }
 }
